@@ -1,0 +1,49 @@
+/*======== abstracts ========*/
+/*======== base ========*/
+* {
+  padding: 0;
+  margin: 0; }
+
+*, ::after, ::before {
+  box-sizing: border-box; }
+
+html {
+  background-color: #ddc39c; }
+
+main {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+/*======== components ========*/
+.chess-board {
+  display: flex;
+  align-items: start;
+  flex-wrap: wrap;
+  height: 90vh;
+  aspect-ratio: 1 / 1;
+  border: #fff 5px solid;
+  outline: 10px solid #462917; }
+  .chess-board__cell {
+    width: 12.5%;
+    height: 12.5%;
+    border: 1px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px; }
+    .chess-board__cell--black {
+      background: #462917; }
+    .chess-board__cell--white {
+      background: #ddc39c; }
+    .chess-board__cell--filled:hover {
+      background-color: #0d6efd; }
+    .chess-board__cell--selected {
+      background-color: #dc3545 !important; }
+.chess-mark--black {
+  color: #000; }
+.chess-mark--white {
+  color: #fff; }
+
+/*# sourceMappingURL=main.css.map */

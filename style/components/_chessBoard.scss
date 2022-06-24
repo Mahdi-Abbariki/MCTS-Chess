@@ -1,0 +1,42 @@
+.chess{
+  &-board{
+    display: flex;
+    align-items: start;
+    flex-wrap: wrap;
+    height: 90vh;
+    aspect-ratio: 1 / 1;
+    border: #fff 5px solid;
+    outline: 10px solid $darkBrown;
+    &__cell{
+      width: 12.5%;
+      height: 12.5%;
+      border: 1px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      &--black{
+        background: $darkBrown;
+      }
+      &--white{
+        background: $lightBrown;
+      }
+      &--filled{
+        &:hover{
+          background-color: $blue;
+        }
+      }
+      &--selected{
+        background-color: $red !important;
+      }
+    }
+  }
+  &-mark{
+    &--black{
+      color: #000;
+    }
+    &--white{
+      color: #fff;
+    }
+  }
+}
