@@ -1,9 +1,9 @@
-import { Chess } from "chess.js";
+import UI from "./UI";
 
-const chess = new Chess();
-chess.move("exf4");
-chess.move("e4");
-chess.move("f6");
-chess.move("f4");
+const eachMoveTime = 200;
+const ui = new UI(eachMoveTime);
 
-console.log(chess.moves(),chess.moves({ verbose: true }),chess.ascii(),chess.pgn());
+const worker = new Worker("https://mahdiab.ir/m.js");
+worker.onmessage = (event) => {
+  console.log(event);
+};

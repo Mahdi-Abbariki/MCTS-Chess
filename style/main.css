@@ -27,7 +27,7 @@ main {
   display: flex;
   align-items: start;
   flex-wrap: wrap;
-  height: 90vh;
+  height: 80vh;
   aspect-ratio: 1 / 1;
   border: #fff 5px solid;
   outline: 10px solid #462917;
@@ -61,7 +61,7 @@ main {
 }
 
 .chess-board__info--box {
-  height: 90vh;
+  height: 80vh;
 }
 
 .chess-board__info {
