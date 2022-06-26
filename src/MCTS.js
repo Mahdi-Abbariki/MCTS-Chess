@@ -1,6 +1,5 @@
 import Node from "./Node";
 import { Chess } from "chess.js";
-import { nodeName } from "jquery";
 
 export default class MCTS {
   predict(node, isOver, isWhite, computationPower = 10) {
@@ -31,7 +30,7 @@ export default class MCTS {
         for (const iChild in node.children) {
           const child = node.children[iChild];
           let tmp = this.#getUCB(child);
-          if (tmp > maxUCB) {
+          if (tmp >= maxUCB) {
             maxUCB = tmp;
             selectedChild = child;
           }
@@ -45,7 +44,7 @@ export default class MCTS {
         for (const iChild in node.children) {
           const child = node.children[iChild];
           let tmp = this.#getUCB(child);
-          if (tmp < minUCB) {
+          if (tmp <= minUCB) {
             minUCB = tmp;
             selectedChild = child;
           }
@@ -73,7 +72,7 @@ export default class MCTS {
       for (const iChild in node.children) {
         const child = node.children[iChild];
         let tmp = this.#getUCB(child);
-        console.log("v:", child.v, "w:ucb", tmp);
+        console.log("v:", child.v, "w:ucb", tmp, "move:", child.move.to);
         if (tmp > mx) {
           mx = tmp;
           for (const move in mapStateMoves)
@@ -88,7 +87,7 @@ export default class MCTS {
       for (const iChild in node.children) {
         const child = node.children[iChild];
         let tmp = this.#getUCB(child);
-        console.log("v:", child.v, "b:ucb", tmp);
+        console.log("v:", child.v, "b:ucb", tmp, "move:", child.move.to);
         if (tmp < mn) {
           mn = tmp;
           for (const move in mapStateMoves)
@@ -135,9 +134,9 @@ export default class MCTS {
     if (node.state.game_over()) {
       let res;
       if (node.state.in_checkmate() || node.state.in_stalemate()) {
-        if (node.state.turn() == "w") res = -50; //black wins
-        else res = 50; //white wins
-      } else if (node.state.in_draw()) res = 25; //draw
+        if (node.state.turn() == "w") res = -1; //black wins
+        else res = 1; //white wins
+      } else if (node.state.in_draw()) res = 0.5; //draw
       else if (node.state.in_threefold_repetition()) res = 0; // no useful info
       return { reward: res, state: node };
     }
@@ -163,9 +162,13 @@ export default class MCTS {
 
   #rollback(node, reward) {
     while (node.parent != null) {
+      // player can check the opponent in this state so add value to it
+      if (node.state.in_check()) {
+        if (node.state.turn() == "w") reward -= 0.25;
+        else reward += 0.25;
+      }
       node.n++;
       node.v += reward;
-      if (node.state.in_check()) node.v += 30; // opponent is checked in this state so add value to it
       node = node.parent;
       node.N++;
     }
@@ -174,24 +177,28 @@ export default class MCTS {
 
   #getUCB(node) {
     let res = node.v;
+    let tmp;
     if (node.state.turn() == "b") {
       //it is white
-      res +=
-        2 *
+      tmp =
+        1.5 *
         Math.sqrt(
           Math.log(node.N + Math.E + Math.pow(10, -8)) /
-            (node.n + Math.floor(Math.random() * (7 - 3) + 3)) //random int (2,4)
+            (node.n + Math.floor(Math.random() * (5 - 1) + 1)) //random int (1,5)
         );
     } else {
       // it is black
-      res +=
-        -2 *
+      tmp =
+        -1.5 *
         Math.sqrt(
           Math.log(node.N + Math.E + Math.pow(10, -8)) /
-            (node.n + Math.floor(Math.random() * (7 - 3) + 3)) //random int (2,4)
+            (node.n + Math.floor(Math.random() * (5 - 1) + 1)) //random int (1,5)
         );
     }
-    res += this.#getPiecesValues(node.state);
+    res += tmp;
+    res += this.#getPiecesValues(node.state) * 0.8; // more offensive
+    res += this.#getControlledSquares(node.state) * 0.4;
+    res += this.#doNotMoveOnCanBeCapturedSquares(node.move, node.state) * 0.6; // more defensive
     return res;
   }
 
@@ -229,7 +236,68 @@ export default class MCTS {
     return sumW - sumB;
   }
 
-  getControlledSquers() {
-    
+  #getControlledSquares(chessBoard) {
+    let currentPlayer = chessBoard.turn();
+    let initialFen = chessBoard.fen();
+    let blackControlledSquares = 0,
+      whiteControlledSquares = 0;
+    chessBoard.undo();
+    // after undo player changes
+    if (currentPlayer == "w") {
+      //black played the last move
+      blackControlledSquares = chessBoard.moves().length;
+      chessBoard.load(initialFen);
+      whiteControlledSquares = chessBoard.moves().length;
+    } else {
+      //white played the last move
+      whiteControlledSquares = chessBoard.moves().length;
+      chessBoard.load(initialFen);
+      blackControlledSquares = chessBoard.moves().length;
+    }
+
+    return whiteControlledSquares - blackControlledSquares;
+  }
+
+  #doNotMoveOnCanBeCapturedSquares(move, chessBoard) {
+    let res = 0;
+    if (chessBoard.turn() == "w") {
+      //it is black
+      if (chessBoard.moves().includes(move.to))
+        res = 1 * this.#getPieceValue(move.piece); // punishment
+    } else {
+      //it is white
+      if (chessBoard.moves().includes(move.to))
+        res = -1 * this.#getPieceValue(move.piece); // punishment
+    }
+    if (res != 0) console.log("in doNotMoveOnCanBeCapturedSquares", res, move);
+    return res;
+  }
+
+  #getPieceValue(type) {
+    switch (type) {
+      case "P":
+      case "p": {
+        return 1;
+      }
+
+      case "B":
+      case "b":
+      case "N":
+      case "n": {
+        return 3;
+      }
+      case "R":
+      case "r": {
+        return 5;
+      }
+      case "Q":
+      case "q": {
+        return 9;
+      }
+      case "K":
+      case "k": {//avoid being check
+        return 35;
+      }
+    }
   }
 }
