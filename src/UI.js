@@ -27,7 +27,7 @@ export default class UI {
     toDiv.html("");
 
     if (move.flags == "c") {
-      let capturedClassName = this.#getClassPiece(move.piece);
+      let capturedClassName = this.#getClassPiece(move.captured);
       let capturedColorClassName = this.#getReversePieceColor(move.color);
       let iconColor = move.color == "w" ? "b" : "w";
 
