@@ -17,7 +17,19 @@ $(function () {
         data.move.promotion && data.move.promotion == "q",
         data.move.flags == "e"
       );
-    } else console.log(data);
+    } else if (data.type == "finished") {
+      let g = data.game;
+      let res;
+      if (g.game_over()) {
+        if (g.in_checkmate() || g.in_stalemate()) {
+          if (g.turn() == "w") res = "b"; //black wins
+          else res = "w"; //white wins
+        } else if (g.in_draw()) res = "d"; //draw
+        else if (g.in_threefold_repetition()) res = "d"; // no useful info
+      }
+      ui.setResult(res);
+      worker.terminate();
+    }
   };
 });
 /*

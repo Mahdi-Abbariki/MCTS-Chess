@@ -57,4 +57,14 @@ export default class UI {
     else if (icon.hasClass("blackPiece")) return "black";
     return false;
   }
+
+  setResult(res) {
+    if (res == "w") {
+      $("#result").html("White Wins");
+    } else if (res == "b") {
+      $("#result").html("Black Wins");
+    } else {
+      $("#result").html("Draw !");
+    }
+  }
 }
