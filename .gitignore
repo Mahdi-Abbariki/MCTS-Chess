@@ -2,3 +2,6 @@
 .idea
 .vscode
 node_modules
+webpack.config.js
+.git-ftp-ignore
+.uploadToServer.sh
