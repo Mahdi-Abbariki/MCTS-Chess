@@ -72,7 +72,7 @@ export default class MCTS {
       for (const iChild in node.children) {
         const child = node.children[iChild];
         let tmp = this.#getUCB(child);
-        console.log("v:", child.v, "w:ucb", tmp, "move:", child.move.to);
+        // console.log("v:", child.v, "w:ucb", tmp, "move:", child.move.to);
         if (tmp > mx) {
           mx = tmp;
           for (const move in mapStateMoves)
@@ -87,7 +87,7 @@ export default class MCTS {
       for (const iChild in node.children) {
         const child = node.children[iChild];
         let tmp = this.#getUCB(child);
-        console.log("v:", child.v, "b:ucb", tmp, "move:", child.move.to);
+        // console.log("v:", child.v, "b:ucb", tmp, "move:", child.move.to);
         if (tmp < mn) {
           mn = tmp;
           for (const move in mapStateMoves)
@@ -200,8 +200,8 @@ export default class MCTS {
     }
     res += tmp;
     res += this.#getPiecesValues(node.state) * 0.8; // more offensive
-    res += this.#getControlledSquares(node.state) * 0.4;
-    res += this.#doNotMoveOnCanBeCapturedSquares(node.state) * 0.5; // more defensive
+    res += this.#getControlledSquares(node.state) * 0.5;
+    res += this.#doNotMoveOnCanBeCapturedSquares(node.state) * 0.7; // more defensive
     res += this.#avoidPromotion(node.state) * 0.8; // more defensive
     return res;
   }
