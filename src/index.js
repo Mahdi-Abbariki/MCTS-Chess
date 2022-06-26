@@ -1,5 +1,5 @@
 /*  
-
+*/
 import UI from "./UI";
 import $ from "jquery";
 
@@ -33,7 +33,7 @@ $(function () {
 });
 
 /*
-*/
+
 
 import { Chess } from "chess.js";
 import MCTS from "./MCTS";
@@ -93,3 +93,4 @@ console.log(s1);
 // log(um);
 // ui.move(um.from, um.to);
 
+*/

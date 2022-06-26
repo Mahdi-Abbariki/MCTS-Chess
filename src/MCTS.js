@@ -2,7 +2,7 @@ import Node from "./Node";
 import { Chess } from "chess.js";
 
 export default class MCTS {
-  predict(node, isOver, isWhite, computationPower = 10) {
+  predict(node, isOver, isWhite, computationPower = 6) {
     if (isOver) return -1;
 
     let allMoves = node.state.moves();
