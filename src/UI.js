@@ -7,7 +7,12 @@ export default class UI {
     this.#transition = transition;
   }
 
-  move(from, to, changePawnToKnight = false, enPassant = false) {
+  move(move) {
+    let from = move.from;
+    let to = move.to;
+    let className = this.#getClassPiece(move.piece);
+    let colorClassName = this.#getPieceColor(move.color);
+
     let fromDiv = $("#" + from);
     let toDiv = $("#" + to);
     if (
@@ -17,45 +22,45 @@ export default class UI {
     )
       return;
 
-    if (toDiv.children().length == 1) {
-      let captured = toDiv.children().first();
-      let iconColor = this.#getPieceColor(captured);
+    fromDiv.addClass("chess-board__cell--selected");
+    fromDiv.html("");
+    toDiv.html("");
 
-      captured.fadeOut(this.#transition, () => {
-        $("#capture-" + iconColor).append(captured);
-        captured.fadeIn();
-      });
+    if (move.flags == "c") {
+      let capturedClassName = this.#getClassPiece(move.piece);
+      let capturedColorClassName = this.#getReversePieceColor(move.color);
+      let iconColor = move.color == "w" ? "b" : "w";
+
+      $("#capture-" + iconColor).append(
+        this.#createIconElement(capturedClassName, capturedColorClassName)
+      );
     }
 
-    if (enPassant) {
+    if (move.flags == "e") {
       let number = from.charAt(1);
       let alphabet = to.charAt(0);
 
-      let icon = $("#" + alphabet + number)
-        .children()
-        .first();
-      let iconColor = this.#getPieceColor(icon);
-      icon.fadeOut(this.#transition, () => {
-        $("#capture-" + iconColor).append(icon);
-        icon.fadeIn();
-      });
+      let capturedClassName = this.#getClassPiece("p");
+      let capturedColorClassName = this.#getReversePieceColor(move.color);
+      let icon = this.#createIconElement(
+        capturedClassName,
+        capturedColorClassName
+      );
+
+      $("#" + alphabet + number).html("");
+
+      let iconColor = move.color == "w" ? "b" : "w";
+      $("#capture-" + iconColor).append(icon);
     }
 
-    let icon = fromDiv.children().first();
-    icon.fadeOut(this.#transition, () => {
-      if (changePawnToKnight) {
-        icon.removeClass("la-chess-pawn");
-        icon.addClass("la-chess-queen");
-      }
-      toDiv.append(icon);
-      icon.fadeIn();
-    });
-  }
+    if (move.promotion && move.promotion == "q")
+      // promotion
+      className = this.#getClassPiece("q");
 
-  #getPieceColor(icon) {
-    if (icon.hasClass("whitePiece")) return "white";
-    else if (icon.hasClass("blackPiece")) return "black";
-    return false;
+    let icon = this.#createIconElement(className, colorClassName);
+    toDiv.append(icon);
+
+    fromDiv.removeClass("chess-board__cell--selected");
   }
 
   setResult(res) {
@@ -66,5 +71,66 @@ export default class UI {
     } else {
       $("#result").html("Draw !");
     }
+  }
+
+  #getClassPiece(type) {
+    switch (type) {
+      case "P":
+      case "p": {
+        return "la-chess-pawn";
+      }
+
+      case "B":
+      case "b": {
+        return "la-chess-bishop";
+      }
+
+      case "N":
+      case "n": {
+        return "la-chess-knight";
+      }
+
+      case "R":
+      case "r": {
+        return "la-chess-rook";
+      }
+
+      case "Q":
+      case "q": {
+        return "la-chess-queen";
+      }
+
+      case "K":
+      case "k": {
+        return "la-chess-king";
+      }
+    }
+  }
+
+  #getPieceColor(color) {
+    switch (color) {
+      case "w": {
+        return "chess-mark--white whitePiece";
+      }
+      case "b": {
+        return "chess-mark--black blackPiece";
+      }
+    }
+  }
+
+  #getReversePieceColor(color) {
+    switch (color) {
+      case "w": {
+        return "chess-mark--black blackPiece";
+      }
+      case "b": {
+        return "chess-mark--white whitePiece";
+      }
+    }
+  }
+
+  #createIconElement(className, color) {
+    let res = className + " " + color;
+    return "<i class='las " + res + "'></i>";
   }
 }

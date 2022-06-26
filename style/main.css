@@ -47,9 +47,6 @@ main {
 .chess-board__cell--white {
   background: #ddc39c;
 }
-.chess-board__cell--filled:hover {
-  background-color: #0d6efd;
-}
 .chess-board__cell--selected {
   background-color: #dc3545 !important;
 }

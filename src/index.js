@@ -1,5 +1,5 @@
-/*  
-*/
+/*
+ */
 import UI from "./UI";
 import $ from "jquery";
 
@@ -11,12 +11,7 @@ $(function () {
   const worker = new Worker(new URL("./worker.js", import.meta.url));
   worker.onmessage = ({ data }) => {
     if (data.type == "move") {
-      ui.move(
-        data.move.from,
-        data.move.to,
-        data.move.promotion && data.move.promotion == "q",
-        data.move.flags == "e"
-      );
+      ui.move(data.move);
     } else if (data.type == "finished") {
       let g = data.game;
       let res;
@@ -54,28 +49,28 @@ s1.state = chess;
 let m1 = mcts.predict(s1, chess.game_over(), true);
 let um = s1.state.move(m1);
 log(um);
-ui.move(um.from, um.to);
+ui.move(um);
 
 let s2 = new Node();
 s2.state = s1.state;
 let m2 = mcts.predict(s2, chess.game_over(), false);
 um = s2.state.move(m2);
 log(um);
-ui.move(um.from, um.to);
+ui.move(um);
 
 s1 = new Node();
 s1.state = s2.state;
 m1 = mcts.predict(s1, chess.game_over(), true);
 um = s1.state.move(m1);
 log(um);
-ui.move(um.from, um.to);
+ui.move(um);
 
 s2 = new Node();
 s2.state = s1.state;
 m2 = mcts.predict(s2, chess.game_over(), false);
 um = s2.state.move(m2);
 log(um);
-ui.move(um.from, um.to);
+ui.move(um);
 
 console.log(s1);
 
@@ -91,6 +86,6 @@ console.log(s1);
 // m2 = mcts.predict(s2, chess.game_over(), false);
 // um = s2.state.move(m2);
 // log(um);
-// ui.move(um.from, um.to);
+// ui.move(um);
 
 */
