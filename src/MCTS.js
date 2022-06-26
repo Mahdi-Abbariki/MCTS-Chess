@@ -146,10 +146,13 @@ export default class MCTS {
     let currentFen = node.state.fen();
     allMoves.forEach((move) => {
       let tempState = new Chess(currentFen);
-      tempState.move(move);
+      let m = tempState.move(move);
+
       let child = new Node();
       child.parent = node;
       child.state = tempState;
+      child.move = m;
+
       node.children.push(child);
     });
 
@@ -260,16 +263,22 @@ export default class MCTS {
 
   #doNotMoveOnCanBeCapturedSquares(move, chessBoard) {
     let res = 0;
+    let moves = chessBoard.moves().map((i) => i.substr(-2));
     if (chessBoard.turn() == "w") {
       //it is black
-      if (chessBoard.moves().includes(move.to))
+      if (
+        move.color == "b" &&
+        (moves.includes(move.to) || moves.includes(move.san))
+      )
         res = 1 * this.#getPieceValue(move.piece); // punishment
     } else {
       //it is white
-      if (chessBoard.moves().includes(move.to))
+      if (
+        move.color == "w" &&
+        (moves.includes(move.to) || moves.includes(move.san))
+      )
         res = -1 * this.#getPieceValue(move.piece); // punishment
     }
-    if (res != 0) console.log("in doNotMoveOnCanBeCapturedSquares", res, move);
     return res;
   }
 
@@ -295,7 +304,8 @@ export default class MCTS {
         return 9;
       }
       case "K":
-      case "k": {//avoid being check
+      case "k": {
+        //avoid being check
         return 35;
       }
     }
