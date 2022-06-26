@@ -50,19 +50,18 @@ export default class MCTS {
             selectedChild = child;
           }
         }
-        console.log(selectedChild);
-        console.log(selectedChild.state.ascii());
+        // console.log(selectedChild);
+        // console.log(selectedChild.state.ascii());
         let exChild = this.#expansion(selectedChild, 1);
-        console.log(exChild);
-        console.log(exChild.state.ascii());
+        // console.log(exChild);
+        // console.log(exChild.state.ascii());
         const { reward, state } = this.#rollout(exChild);
-        console.log(reward);
-        console.log(state);
-        console.log(state.state.ascii());
+        // console.log(reward);
+        // console.log(state);
+        // console.log(state.state.ascii());
         node = this.#rollback(state, reward);
-        console.log(node);
-        console.log(node.state.ascii());
-        fasdfsdf;
+        // console.log(node);
+        // console.log(node.state.ascii());
       }
       computationPower--;
     }
