@@ -1,5 +1,5 @@
 /*  
-*/
+
 import UI from "./UI";
 import $ from "jquery";
 
@@ -10,8 +10,6 @@ $(function () {
   console.log("ui ready");
   const worker = new Worker(new URL("./worker.js", import.meta.url));
   worker.onmessage = ({ data }) => {
-    console.log(data);
-
     if (data.type == "move") {
       ui.move(
         data.move.from,
@@ -35,7 +33,7 @@ $(function () {
 });
 
 /*
-
+*/
 
 import { Chess } from "chess.js";
 import MCTS from "./MCTS";
@@ -81,19 +79,17 @@ ui.move(um.from, um.to);
 
 console.log(s1);
 
-s1 = new Node();
-s1.state = s2.state;
-m1 = mcts.predict(s1, chess.game_over(), true);
-um = s1.state.move(m1);
-log(um);
-ui.move(um.from,um.to);
+// s1 = new Node();
+// s1.state = s2.state;
+// m1 = mcts.predict(s1, chess.game_over(), true);
+// um = s1.state.move(m1);
+// log(um);
+// ui.move(um.from,um.to);
 
-s2 = new Node();
-s2.state = s1.state;
-m2 = mcts.predict(s2, chess.game_over(), false);
-um = s2.state.move(m2);
-log(um);
-ui.move(um.from, um.to);
+// s2 = new Node();
+// s2.state = s1.state;
+// m2 = mcts.predict(s2, chess.game_over(), false);
+// um = s2.state.move(m2);
+// log(um);
+// ui.move(um.from, um.to);
 
-
-*/
