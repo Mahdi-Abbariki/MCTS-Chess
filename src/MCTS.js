@@ -202,7 +202,7 @@ export default class MCTS {
     res += this.#getPiecesValues(node.state) * 0.8; // more offensive
     res += this.#getControlledSquares(node.state) * 0.5;
     res += this.#doNotMoveOnCanBeCapturedSquares(node.state) * 0.7; // more defensive
-    res += this.#avoidPromotion(node.state) * 0.8; // more defensive
+    // res += this.#avoidPromotion(node.state) * 0.8; // more defensive
     return res;
   }
 
