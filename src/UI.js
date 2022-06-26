@@ -7,7 +7,7 @@ export default class UI {
     this.#transition = transition;
   }
 
-  move(from, to) {
+  move(from, to, changePawnToKnight = false) {
     let fromDiv = $("#" + from);
     let toDiv = $("#" + to);
     if (
@@ -29,6 +29,8 @@ export default class UI {
 
     let icon = fromDiv.children().first();
     icon.fadeOut(this.#transition, () => {
+      icon.removeClass("la-chess-pawn");
+      icon.addClass("la-chess-knight");
       toDiv.append(icon);
       icon.fadeIn();
     });
