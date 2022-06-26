@@ -3,8 +3,7 @@
 import UI from "./UI";
 import $ from "jquery";
 
-const eachMoveTime = 0;
-const ui = new UI(eachMoveTime);
+const ui = new UI();
 
 $(function () {
   console.log("ui ready");
@@ -29,7 +28,6 @@ $(function () {
 
 /*
 
-
 import { Chess } from "chess.js";
 import MCTS from "./MCTS";
 import Node from "./Node";
@@ -37,8 +35,7 @@ import UI from "./UI";
 const chess = new Chess();
 const mcts = new MCTS();
 
-const eachMoveTime = 0;
-const ui = new UI(eachMoveTime);
+const ui = new UI();
 
 function log(e) {
   console.log(e);
@@ -51,26 +48,26 @@ let um = s1.state.move(m1);
 log(um);
 ui.move(um);
 
-let s2 = new Node();
-s2.state = s1.state;
-let m2 = mcts.predict(s2, chess.game_over(), false);
-um = s2.state.move(m2);
-log(um);
-ui.move(um);
+// let s2 = new Node();
+// s2.state = s1.state;
+// let m2 = mcts.predict(s2, chess.game_over(), false);
+// um = s2.state.move(m2);
+// log(um);
+// ui.move(um);
 
-s1 = new Node();
-s1.state = s2.state;
-m1 = mcts.predict(s1, chess.game_over(), true);
-um = s1.state.move(m1);
-log(um);
-ui.move(um);
+// s1 = new Node();
+// s1.state = s2.state;
+// m1 = mcts.predict(s1, chess.game_over(), true);
+// um = s1.state.move(m1);
+// log(um);
+// ui.move(um);
 
-s2 = new Node();
-s2.state = s1.state;
-m2 = mcts.predict(s2, chess.game_over(), false);
-um = s2.state.move(m2);
-log(um);
-ui.move(um);
+// s2 = new Node();
+// s2.state = s1.state;
+// m2 = mcts.predict(s2, chess.game_over(), false);
+// um = s2.state.move(m2);
+// log(um);
+// ui.move(um);
 
 console.log(s1);
 
@@ -87,5 +84,4 @@ console.log(s1);
 // um = s2.state.move(m2);
 // log(um);
 // ui.move(um);
-
 */

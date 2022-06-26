@@ -1,12 +1,6 @@
 import $ from "jquery";
 
 export default class UI {
-  #transition;
-
-  constructor(transition = 400) {
-    this.#transition = transition;
-  }
-
   move(move) {
     let from = move.from;
     let to = move.to;
@@ -26,7 +20,8 @@ export default class UI {
     fromDiv.html("");
     toDiv.html("");
 
-    if (move.flags == "c") {
+    if (move.flags == "c" || move.flags == "cp") {
+      //capture or capture promotion
       let capturedClassName = this.#getClassPiece(move.captured);
       let capturedColorClassName = this.#getReversePieceColor(move.color);
       let iconColor = move.color == "w" ? "b" : "w";
@@ -53,9 +48,9 @@ export default class UI {
       $("#capture-" + iconColor).append(icon);
     }
 
-    if (move.promotion && move.promotion == "q")
+    if ((move.flags == "np" || move.flags == "cp") && move.promotion)
       // promotion
-      className = this.#getClassPiece("q");
+      className = this.#getClassPiece(move.promotion);
 
     let icon = this.#createIconElement(className, colorClassName);
     toDiv.append(icon);

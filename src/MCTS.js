@@ -202,7 +202,7 @@ export default class MCTS {
     res += this.#getPiecesValues(node.state) * 0.8; // more offensive
     res += this.#getControlledSquares(node.state) * 0.5;
     res += this.#doNotMoveOnCanBeCapturedSquares(node.state) * 0.7; // more defensive
-    // res += this.#avoidPromotion(node.state) * 0.8; // more defensive
+    res += this.#avoidPromotion(node.state) * 0.15; // more defensive (promotions are always 3 or 4 types together so the number is higher than 20 or 40)
     return res;
   }
 
@@ -273,11 +273,11 @@ export default class MCTS {
       if (chessBoard.turn() == "w") {
         //it is black
         if (capture.color == "w")
-          res = 1 * this.#getPieceValue(capture.captured); // punishment
+          res += 1 * this.#getPieceValue(capture.captured); // punishment (positive value)
       } else {
         //it is white
         if (capture.color == "b")
-          res = 1 * this.#getPieceValue(capture.captured); // punishment
+          res += -1 * this.#getPieceValue(capture.captured); // punishment (negative value)
       }
     });
     return res;
@@ -287,15 +287,17 @@ export default class MCTS {
     let res = 0;
     let promotionMoves = chessBoard
       .moves({ verbose: true })
-      .filter((i) => i.flags == "pc" || i.flags == "p");
+      .filter((i) => i.flags == "cp" || i.flags == "np");
 
-    if (chessBoard.turn() == "w") {
-      //it is black
-      res = promotionMoves.length * this.#getPieceValue("q"); // punishment
-    } else {
-      //it is white
-      res = -1 * promotionMoves.length * this.#getPieceValue("q"); // punishment
-    }
+    promotionMoves.forEach((p) => {
+      if (p.color == "w") {
+        //it is black turn
+        res += 1 * this.#getPieceValue(p.promotion); // punishment
+      } else {
+        //it is white turn
+        res += -1 * this.#getPieceValue(p.promotion); // punishment
+      }
+    });
     return res;
   }
 
