@@ -8,7 +8,9 @@ $(function () {
   console.log("ui ready");
   const worker = new Worker(new URL("./worker.js", import.meta.url));
   worker.onmessage = ({ data }) => {
-    ui.move(data.from, data.to);
+    console.log(data);
+    if (data.type == "move") ui.move(data.from, data.to);
+    else console.log(data);
   };
 });
 /*
@@ -34,7 +36,7 @@ import Node from "./Node";
 const chess = new Chess();
 const mcts = new MCTS();
 
-const eachMoveTime = 200;
+const eachMoveTime = 0;
 const ui = new UI(eachMoveTime);
 
 function log(e) {
@@ -70,19 +72,20 @@ um = s2.state.move(m2);
 log(um);
 ui.move(um.from,um.to);
 
-s1 = new Node();
-s1.state = s2.state;
-m1 = mcts.predict(s1, chess.game_over(), true);
-um = s1.state.move(m1);
-log(um);
-ui.move(um.from,um.to);
+// s1 = new Node();
+// s1.state = s2.state;
+// m1 = mcts.predict(s1, chess.game_over(), true);
+// um = s1.state.move(m1);
+// log(um);
+// ui.move(um.from,um.to);
 
 
-s2 = new Node();
-s2.state = s1.state;
-m2 = mcts.predict(s2, chess.game_over(), false);
-um = s2.state.move(m2);
-log(um);
-ui.move(um.from, um.to);
+// s2 = new Node();
+// s2.state = s1.state;
+// m2 = mcts.predict(s2, chess.game_over(), false);
+// um = s2.state.move(m2);
+// log(um);
+// ui.move(um.from, um.to);
+
 
 */

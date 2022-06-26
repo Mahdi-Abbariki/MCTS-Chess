@@ -50,9 +50,19 @@ export default class MCTS {
             selectedChild = child;
           }
         }
+        console.log(selectedChild);
+        console.log(selectedChild.state.ascii());
         let exChild = this.#expansion(selectedChild, 1);
+        console.log(exChild);
+        console.log(exChild.state.ascii());
         const { reward, state } = this.#rollout(exChild);
+        console.log(reward);
+        console.log(state);
+        console.log(state.state.ascii());
         node = this.#rollback(state, reward);
+        console.log(node);
+        console.log(node.state.ascii());
+        fasdfsdf;
       }
       computationPower--;
     }
@@ -126,9 +136,9 @@ export default class MCTS {
     if (node.state.game_over()) {
       let res;
       if (node.state.in_checkmate() || node.state.in_stalemate()) {
-        if (node.state.turn() == "w") res = -1; //black wins
-        else res = 1; //white wins
-      } else if (node.state.in_draw()) res = 0.5; //draw
+        if (node.state.turn() == "w") res = -50; //black wins
+        else res = 50; //white wins
+      } else if (node.state.in_draw()) res = 25; //draw
       else if (node.state.in_threefold_repetition()) res = 0; // no useful info
       return { reward: res, state: node };
     }
@@ -156,7 +166,7 @@ export default class MCTS {
     while (node.parent != null) {
       node.n++;
       node.v += reward;
-      if (node.state.in_check()) node.v += 0.2; // opponent is checked in this state so add value to it
+      if (node.state.in_check()) node.v += 30; // opponent is checked in this state so add value to it
       node = node.parent;
       node.N++;
     }
@@ -164,33 +174,58 @@ export default class MCTS {
   }
 
   #getUCB(node) {
-    node.n == 0;
-    return (
-      node.v +
-      2 *
+    let res = node.v;
+    if (node.state.turn() == "b") {
+      //it is white
+      res +=
+        2 *
         Math.sqrt(
           Math.log(node.N + Math.E + Math.pow(10, -8)) /
-            (node.n + Math.floor(Math.random() * (2 - 1) + 1)) //random int (2,4)
-        ) +
-      this.#getPiecesValues(node.state)
-    );
+            (node.n + Math.floor(Math.random() * (7 - 3) + 3)) //random int (2,4)
+        );
+    } else {
+      // it is black
+      res +=
+        -2 *
+        Math.sqrt(
+          Math.log(node.N + Math.E + Math.pow(10, -8)) /
+            (node.n + Math.floor(Math.random() * (7 - 3) + 3)) //random int (2,4)
+        );
+    }
+    res += this.#getPiecesValues(node.state);
+    return res;
   }
 
   #getPiecesValues(chessBoard) {
-    let fen = chessBoard.fen();
+    let fen = chessBoard.fen().split(" ")[0];
+
     let whitePawn = (fen.match(/P/g) || []).length;
     let whiteKnight = (fen.match(/N/g) || []).length * 3;
     let whiteBishop = (fen.match(/B/g) || []).length * 3;
     let whiteRook = (fen.match(/R/g) || []).length * 5;
     let whiteQueen = (fen.match(/Q/g) || []).length * 9;
-    let sumW = whiteQueen + whitePawn + whiteBishop + whiteRook + whiteKnight;
+    let whiteKing = (fen.match(/K/g) || []).length * 35;
+    let sumW =
+      whitePawn +
+      whiteKnight +
+      whiteBishop +
+      whiteRook +
+      whiteQueen +
+      whiteKing;
 
     let blackPawn = (fen.match(/p/g) || []).length;
     let blackKnight = (fen.match(/n/g) || []).length * 3;
     let blackBishop = (fen.match(/b/g) || []).length * 3;
     let blackRook = (fen.match(/r/g) || []).length * 5;
     let blackQueen = (fen.match(/q/g) || []).length * 9;
-    let sumB = blackQueen + blackRook + blackBishop + blackKnight + blackPawn;
+    let blackKing = (fen.match(/K/g) || []).length * 35;
+    let sumB =
+      blackQueen +
+      blackRook +
+      blackBishop +
+      blackKnight +
+      blackPawn +
+      blackKing;
 
     return sumW - sumB;
   }
