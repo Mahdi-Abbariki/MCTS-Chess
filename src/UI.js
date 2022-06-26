@@ -7,7 +7,7 @@ export default class UI {
     this.#transition = transition;
   }
 
-  move(from, to, changePawnToKnight = false) {
+  move(from, to, changePawnToKnight = false, enPassant = false) {
     let fromDiv = $("#" + from);
     let toDiv = $("#" + to);
     if (
@@ -27,11 +27,25 @@ export default class UI {
       });
     }
 
+    if (enPassant) {
+      let number = from.charAt(1);
+      let alphabet = to.charAt(0);
+
+      let icon = $("#" + alphabet + number)
+        .children()
+        .first();
+      let iconColor = this.#getPieceColor(icon);
+      icon.fadeOut(this.#transition, () => {
+        $("#capture-" + iconColor).append(icon);
+        icon.fadeIn();
+      });
+    }
+
     let icon = fromDiv.children().first();
     icon.fadeOut(this.#transition, () => {
       if (changePawnToKnight) {
         icon.removeClass("la-chess-pawn");
-        icon.addClass("la-chess-knight");
+        icon.addClass("la-chess-queen");
       }
       toDiv.append(icon);
       icon.fadeIn();

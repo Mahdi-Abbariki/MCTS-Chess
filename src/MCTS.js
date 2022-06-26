@@ -228,4 +228,8 @@ export default class MCTS {
 
     return sumW - sumB;
   }
+
+  getControlledSquers() {
+    
+  }
 }

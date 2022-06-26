@@ -15,4 +15,4 @@ while (!chess.game_over()) {
   self.postMessage({ type: "move", move: m });
   whiteTurn = !whiteTurn;
 }
-postMessage({ type: "finished", game: chess });
+self.postMessage({ type: "finished", game: chess });

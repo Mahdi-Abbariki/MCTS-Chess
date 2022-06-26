@@ -9,8 +9,15 @@ $(function () {
   const worker = new Worker(new URL("./worker.js", import.meta.url));
   worker.onmessage = ({ data }) => {
     console.log(data);
-    if (data.type == "move") ui.move(data.move.from, data.move.to, data.move.flags == "p");
-    else console.log(data);
+
+    if (data.type == "move") {
+      ui.move(
+        data.move.from,
+        data.move.to,
+        data.move.promotion && data.move.promotion == "q",
+        data.move.flags == "e"
+      );
+    } else console.log(data);
   };
 });
 /*
