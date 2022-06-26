@@ -9,7 +9,7 @@ $(function () {
   const worker = new Worker(new URL("./worker.js", import.meta.url));
   worker.onmessage = ({ data }) => {
     console.log(data);
-    if (data.type == "move") ui.move(data.move.from, data.move.to, data.move.type == 'p');
+    if (data.type == "move") ui.move(data.move.from, data.move.to, data.move.flags == "p");
     else console.log(data);
   };
 });

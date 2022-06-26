@@ -29,8 +29,10 @@ export default class UI {
 
     let icon = fromDiv.children().first();
     icon.fadeOut(this.#transition, () => {
-      icon.removeClass("la-chess-pawn");
-      icon.addClass("la-chess-knight");
+      if (changePawnToKnight) {
+        icon.removeClass("la-chess-pawn");
+        icon.addClass("la-chess-knight");
+      }
       toDiv.append(icon);
       icon.fadeIn();
     });
