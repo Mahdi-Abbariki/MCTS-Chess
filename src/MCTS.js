@@ -326,7 +326,7 @@ export default class MCTS {
       case "K":
       case "k": {
         //avoid being check
-        return 15;
+        return 30;
       }
     }
   }
