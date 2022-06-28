@@ -199,9 +199,9 @@ export default class MCTS {
         );
     }
     res += tmp;
-    res += this.#getPiecesValues(node.state) * 0.8; // more offensive
+    res += this.#getPiecesValues(node.state) * 0.7; // more offensive
     res += this.#getControlledSquares(node.state) * 0.5;
-    res += this.#doNotMoveOnCanBeCapturedSquares(node.state) * 0.8; // more defensive
+    res += this.#doNotMoveOnCanBeCapturedSquares(node.state) * 0.6; // more defensive
     res += this.#avoidPromotion(node.state) * 0.15; // more defensive (promotions are always 3 or 4 types together so the number is higher than 20 or 40)
     return res;
   }
