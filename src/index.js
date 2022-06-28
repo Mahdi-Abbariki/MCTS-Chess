@@ -12,13 +12,12 @@ $(function () {
     if (data.type == "move") {
       ui.move(data.move);
     } else if (data.type == "finished") {
-      let g = data.game;
       let res;
 
       if (data.is_checkmate) {
         if (data.turn == "w") res = "b"; //black wins
         else res = "w"; //white wins
-      } else if (g.is_draw) res = "d"; //draw
+      } else if (data.is_draw) res = "d"; //draw
 
       ui.setResult(res);
       worker.terminate();
