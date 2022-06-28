@@ -1,5 +1,4 @@
 /*
- */
 import UI from "./UI";
 import $ from "jquery";
 
@@ -27,7 +26,7 @@ $(function () {
 });
 
 /*
-
+*/
 import { Chess } from "chess.js";
 import MCTS from "./MCTS";
 import Node from "./Node";
@@ -41,12 +40,12 @@ function log(e) {
   console.log(e);
 }
 
-let s1 = new Node();
-s1.state = chess;
-let m1 = mcts.predict(s1, chess.game_over(), true);
-let um = s1.state.move(m1);
-log(um);
-ui.move(um);
+// let s1 = new Node();
+// s1.state = chess;
+// let m1 = mcts.predict(s1, chess.game_over(), true);
+// let um = s1.state.move(m1);
+// log(um);
+// ui.move(um);
 
 // let s2 = new Node();
 // s2.state = s1.state;
@@ -69,7 +68,7 @@ ui.move(um);
 // log(um);
 // ui.move(um);
 
-console.log(s1);
+// console.log(s1);
 
 // s1 = new Node();
 // s1.state = s2.state;
@@ -84,4 +83,15 @@ console.log(s1);
 // um = s2.state.move(m2);
 // log(um);
 // ui.move(um);
-*/
+let whiteTurn = 1;
+for (let i = 0; i < 10; i++) {
+  const root = new Node();
+  root.state = chess;
+  if (whiteTurn) console.log("white is deciding");
+  else console.log("black is deciding");
+  let res = mcts.predict(root, chess.game_over(), whiteTurn);
+  let m = chess.move(res);
+  log(m);
+  self.postMessage({ type: "move", move: m });
+  whiteTurn = !whiteTurn;
+}

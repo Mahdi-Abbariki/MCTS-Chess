@@ -201,7 +201,7 @@ export default class MCTS {
     res += tmp;
     res += this.#getPiecesValues(node.state) * 0.8; // more offensive
     res += this.#getControlledSquares(node.state) * 0.5;
-    res += this.#doNotMoveOnCanBeCapturedSquares(node.state) * 0.7; // more defensive
+    res += this.#doNotMoveOnCanBeCapturedSquares(node.state) * 0.8; // more defensive
     res += this.#avoidPromotion(node.state) * 0.15; // more defensive (promotions are always 3 or 4 types together so the number is higher than 20 or 40)
     return res;
   }
@@ -209,12 +209,12 @@ export default class MCTS {
   #getPiecesValues(chessBoard) {
     let fen = chessBoard.fen().split(" ")[0];
 
-    let whitePawn = (fen.match(/P/g) || []).length;
-    let whiteKnight = (fen.match(/N/g) || []).length * 3;
-    let whiteBishop = (fen.match(/B/g) || []).length * 3;
-    let whiteRook = (fen.match(/R/g) || []).length * 5;
-    let whiteQueen = (fen.match(/Q/g) || []).length * 9;
-    let whiteKing = (fen.match(/K/g) || []).length * 35;
+    let whitePawn = (fen.match(/P/g) || []).length * this.#getPieceValue("p");
+    let whiteKnight = (fen.match(/N/g) || []).length * this.#getPieceValue("n");
+    let whiteBishop = (fen.match(/B/g) || []).length * this.#getPieceValue("b");
+    let whiteRook = (fen.match(/R/g) || []).length * this.#getPieceValue("r");
+    let whiteQueen = (fen.match(/Q/g) || []).length * this.#getPieceValue("q");
+    let whiteKing = (fen.match(/K/g) || []).length * this.#getPieceValue("k");
     let sumW =
       whitePawn +
       whiteKnight +
@@ -223,12 +223,12 @@ export default class MCTS {
       whiteQueen +
       whiteKing;
 
-    let blackPawn = (fen.match(/p/g) || []).length;
-    let blackKnight = (fen.match(/n/g) || []).length * 3;
-    let blackBishop = (fen.match(/b/g) || []).length * 3;
-    let blackRook = (fen.match(/r/g) || []).length * 5;
-    let blackQueen = (fen.match(/q/g) || []).length * 9;
-    let blackKing = (fen.match(/K/g) || []).length * 35;
+    let blackPawn = (fen.match(/p/g) || []).length * this.#getPieceValue("p");
+    let blackKnight = (fen.match(/n/g) || []).length * this.#getPieceValue("n");
+    let blackBishop = (fen.match(/b/g) || []).length * this.#getPieceValue("b");
+    let blackRook = (fen.match(/r/g) || []).length * this.#getPieceValue("r");
+    let blackQueen = (fen.match(/q/g) || []).length * this.#getPieceValue("q");
+    let blackKing = (fen.match(/K/g) || []).length * this.#getPieceValue("k");
     let sumB =
       blackQueen +
       blackRook +
@@ -280,6 +280,7 @@ export default class MCTS {
           res += -1 * this.#getPieceValue(capture.captured); // punishment (negative value)
       }
     });
+    // if (captureMoves.length > 0) console.log(captureMoves, res);
     return res;
   }
 
@@ -325,7 +326,7 @@ export default class MCTS {
       case "K":
       case "k": {
         //avoid being check
-        return 35;
+        return 15;
       }
     }
   }
